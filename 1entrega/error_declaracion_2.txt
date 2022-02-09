@@ -1,0 +1,2 @@
+*/ mas variables que tipos /*
+var [ c, a ] as [ real ]
