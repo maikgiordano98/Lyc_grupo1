@@ -74,7 +74,7 @@ void CheckId(const char *const id);
 %token NL
 
 %token GET
-%token PRINT
+%token DISPLAY
 %token LEN
 
 %token CONST_NOMBRE
@@ -213,7 +213,7 @@ constante: const_num | str_const;
  * IO
  * ========================= */
 
-iostmt: PRINT operando {printf("PRINT ");}
+iostmt: DISPLAY operando {printf("DISPLAY ");}
 			| GET ID {CheckId($2); printf("GET ");}
 			;
 
@@ -396,7 +396,7 @@ void AddIds(const char *const ids, const char *const types)
 
 /**
  * Verifica que un id se encuentre en la tabla de simbolos.
- * Si no se encuentra, print de error y exit(1);
+ * Si no se encuentra, DISPLAY de error y exit(1);
  */
 void CheckId(const char *const id)
 {

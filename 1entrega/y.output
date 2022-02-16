@@ -99,7 +99,7 @@ Gramática
    65 constante: const_num
    66          | str_const
 
-   67 iostmt: PRINT operando
+   67 iostmt: DISPLAY operando
    68       | GET ID
 
    69 operando: expr
@@ -146,7 +146,7 @@ STRING_T (290) 40
 END_STMT (291) 28
 NL (292) 29
 GET (293) 68
-PRINT (294) 67
+DISPLAY (294) 67
 LEN (295) 60 61
 CONST_NOMBRE (296) 31 32 33
 
@@ -226,7 +226,7 @@ estado 0
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     prg_       ir al estado 10
@@ -325,7 +325,7 @@ estado 7
 
 estado 8
 
-   67 iostmt: PRINT . operando
+   67 iostmt: DISPLAY . operando
 
     ID         desplazar e ir al estado 20
     PR_ABR     desplazar e ir al estado 39
@@ -370,7 +370,7 @@ estado 11
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     $default  reduce usando la regla 1 (prg_)
@@ -398,7 +398,7 @@ estado 12
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     ID            [reduce usando la regla 2 (prg)]
@@ -408,7 +408,7 @@ estado 12
     END_STMT      [reduce usando la regla 2 (prg)]
     NL            [reduce usando la regla 2 (prg)]
     GET           [reduce usando la regla 2 (prg)]
-    PRINT         [reduce usando la regla 2 (prg)]
+    DISPLAY       [reduce usando la regla 2 (prg)]
     CONST_NOMBRE  [reduce usando la regla 2 (prg)]
     $default      reduce usando la regla 2 (prg)
 
@@ -689,7 +689,7 @@ estado 39
 
 estado 40
 
-   67 iostmt: PRINT operando .
+   67 iostmt: DISPLAY operando .
 
     $default  reduce usando la regla 67 (iostmt)
 
@@ -723,7 +723,7 @@ estado 43
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     ID            [reduce usando la regla 3 (prg)]
@@ -733,7 +733,7 @@ estado 43
     END_STMT      [reduce usando la regla 3 (prg)]
     NL            [reduce usando la regla 3 (prg)]
     GET           [reduce usando la regla 3 (prg)]
-    PRINT         [reduce usando la regla 3 (prg)]
+    DISPLAY       [reduce usando la regla 3 (prg)]
     CONST_NOMBRE  [reduce usando la regla 3 (prg)]
     $default      reduce usando la regla 3 (prg)
 
@@ -857,7 +857,7 @@ estado 54
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     bloq       ir al estado 86
@@ -1020,7 +1020,7 @@ estado 70
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     bloq       ir al estado 90
@@ -1186,7 +1186,7 @@ estado 86
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     flowcontr  ir al estado 44
@@ -1233,7 +1233,7 @@ estado 90
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     flowcontr  ir al estado 44
@@ -1460,7 +1460,7 @@ estado 117
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     bloq       ir al estado 119
@@ -1494,7 +1494,7 @@ estado 119
     END_STMT      desplazar e ir al estado 5
     NL            desplazar e ir al estado 6
     GET           desplazar e ir al estado 7
-    PRINT         desplazar e ir al estado 8
+    DISPLAY       desplazar e ir al estado 8
     CONST_NOMBRE  desplazar e ir al estado 9
 
     flowcontr  ir al estado 44

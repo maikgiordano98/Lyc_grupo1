@@ -81,7 +81,7 @@ NL \n
 
 /* IO */
 GET   get
-PRINT print
+DISPLAY DISPLAY
 
 /* otros */
 WHITE [ \t]+
@@ -181,7 +181,7 @@ CONST_NOMBRE CONST
 		 }
 
 {GET}   {fprintf(lexout, "GET"); return GET;}
-{PRINT} {fprintf(lexout, "PRINT"); return PRINT;}
+{DISPLAY} {fprintf(lexout, "DISPLAY"); return DISPLAY;}
 
 {ID} {fprintf(lexout, "ID"); strcpy(yylval.strval, yytext); return ID;}
 {LL_ABR} {fprintf(lexout, "LL_ABR"); return LL_ABR;}
