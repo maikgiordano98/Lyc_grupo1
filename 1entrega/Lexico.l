@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <float.h>
 
 #include "y.tab.h"
 
 char *str_dup(const char * const str);
-void errtok(const char * const msg);
+void errtok(const char * const token, const char * const value, const char * const msg);
 
 extern FILE *lexout;
 %}
@@ -102,8 +103,7 @@ CONST_NOMBRE CONST
 
 						if ( errno != 0 || (num > 32767 || num < -32768) )
 							{
-							// TODO: return error?
-							errtok("entero fuera de rango");
+							errtok("CONST_INT" , yydup, "Entero fuera de rango");
 							}
 
 						strcpy(yylval.strval, yydup);
@@ -118,10 +118,10 @@ CONST_NOMBRE CONST
 					errno = 0;
 					float num = strtof(yydup, &ret);
 
-					if ( errno != 0 )
+					// FLT_MAX & FLT_MAX from float.h library
+					if ( errno != 0 || (num > FLT_MAX || num < FLT_MIN) )
 					{
-						// TODO: return error?
-						errtok("real fuera de rango");
+						errtok("CONST_R", yydup, "Real fuera de rango");
 					}
 
 					strcpy(yylval.strval, yydup);
@@ -132,10 +132,9 @@ CONST_NOMBRE CONST
 					}
 {STR} {
 			if ( strlen(yytext) > 30 )
-				{
-				// TODO: return error?
-				errtok("string mayor a 30 caracteres");
-				}
+			{
+				errtok("STR", yytext, "String mayor a 30 caracteres");
+			}
 
 			strcpy(yylval.strval, yytext);
 			fprintf(lexout, "STR");
@@ -193,7 +192,7 @@ CONST_NOMBRE CONST
 {PR_CRR} {fprintf(lexout, "PR_CRR"); return PR_CRR;}
 
 {WHITE} fprintf(lexout, "%s", yytext); /* me como el texto, lo imprimo en out, pero no lo mando al sintactico */
-. {errtok("desconocido"); /*TODO: return error ?*/}
+. { errtok("UNKNOWN_TOKEN", yytext, "Error desconocido"); }
 
 %%
 
@@ -209,7 +208,7 @@ char *str_dup(const char * const str)
 	return new_str;
 }
 
-void errtok(const char * const msg)
+void errtok(const char * const token, const char * const value, const char * const msg)
 {
-	fprintf(stderr, "Token invalido en la linea %d: %s\n", yylineno, msg);
+	fprintf(stderr, "Error al procesar token %s con valor %s en la linea %d: %s.\n", token, value, yylineno, msg);
 }

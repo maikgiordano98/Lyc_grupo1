@@ -9,7 +9,7 @@ var [str2] as [string]
 entero = 12
 
 */ asignacion de real /*
-flotante = 12.
+flotante = 1200000.5
 c = .5
 c = 12.5
 
