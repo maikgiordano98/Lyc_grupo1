@@ -238,13 +238,13 @@ int main(int argc, char *argv[]) {
 		char *type;
 		switch ( sym.type ) {
 		case TABLE_INT:
-			type = "Integer";
+			type = sym.name[0]  == '_' ? "cte_int" : "Integer"; 
 			break;
 		case TABLE_REAL:
-			type = "Real";
+			type = sym.name[0]  == '_' ? "cte_real" : "Real";
 			break;
 		case TABLE_STRING:
-			type = "String";
+			type = sym.name[0]  == '_' ? "cte_str" : "String";
 			break;
 		default:
 			fprintf(stderr, "Tipo de dato invalido");
@@ -289,7 +289,10 @@ void doAddConstant(const char *const val, DataType type)
 	strcat(s.name, val);
 	s.type = type;
 	strcpy(s.value, val);
-	s.len = 0;
+	if(type == TABLE_STRING)
+		s.len = strlen(val);
+	else
+		s.len = 0;
 	AddSymbol(&sym_table, &s);
 }
 
@@ -299,7 +302,10 @@ void AddConstantNombre(const char *const name, const char *const val, DataType t
 	strcpy(s.name, name);
 	strcpy(s.value, val);
 	s.type = type;
-	s.len = 0;
+	if(type == TABLE_STRING)
+		s.len = strlen(val);
+	else
+		s.len = 0;
 	AddSymbol(&sym_table, &s);
 }
 
