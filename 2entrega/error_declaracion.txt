@@ -1,0 +1,3 @@
+*/ mas tipos de datos que variables /*
+var [ c ] as [ real, int ]
+

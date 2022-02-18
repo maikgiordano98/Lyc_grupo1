@@ -1,0 +1,3 @@
+var [ c ] as [ real ]
+c = 1
+d = 2
