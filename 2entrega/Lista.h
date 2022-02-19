@@ -10,6 +10,7 @@ typedef struct l_nodo
     char elemento[32];
 
 }l_nodo;
+
 typedef l_nodo* t_lista;
 
 

@@ -196,15 +196,12 @@ tipo: REAL {strcpy($$, "real");} | STRING_T {strcpy($$, "string");} | INT {strcp
  * ASIGNACION
  * ========================= */
 
-assg: left ASIGN assg {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;
+assg: ID ASIGN assg {CheckId($1); enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;
 					   enlistar(&polacaLista, "=", posicionPolaca); posicionPolaca++;
 					   printf("Asignacion multiple ");}
-		| left ASIGN right {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;
+		| ID ASIGN right {CheckId($1); enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;
 					   		enlistar(&polacaLista, "=", posicionPolaca); posicionPolaca++;
 							printf("Asignacion ");}
-		;
-
-left: ID {CheckId($1); strcpy($$, $1);}
 		;
 
 right: expr
@@ -225,7 +222,7 @@ expr: expr SUM termino {enlistar(&polacaLista, "+", posicionPolaca); posicionPol
 
 termino: termino MULT factor {enlistar(&polacaLista, "*", posicionPolaca); posicionPolaca++; printf("Multiplicacion: ");}
 			 | termino DIV factor { enlistar(&polacaLista, "/", posicionPolaca); posicionPolaca++; printf("Division: ");}
-			 | factor { terminoIdx = factorIdx; }
+			 | factor
 			 ;
 
 factor: PR_ABR expr PR_CRR {printf("Expresion en parentesis ");}
@@ -250,7 +247,8 @@ constantes: constante
 					;
 
 constante: const_num 
-			| str_const {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;};
+			| str_const
+			;
 
 /* =========================
  * IO

@@ -1,0 +1,8 @@
+1	12
+2	entero
+3	=
+4	entero
+5	1
+6	+
+7	entero
+8	=
