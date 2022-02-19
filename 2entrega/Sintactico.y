@@ -8,6 +8,7 @@
 #include "Cola.h"
 #include "Pila.h"
 #include "Lista.h"
+#include "funciones.h"
 
 #define VAL_SZ 255
 
@@ -127,30 +128,31 @@ bloq: flowcontr
 		| bloq sent
 		;
 
-flowcontr: IF conds LL_ABR bloq LL_CRR ELSE LL_ABR bloq LL_CRR {printf("IF CON ELSE ");}
-				 | IF conds LL_ABR bloq LL_CRR {printf("IF SIMPLE ");}
-				 | WHILE conds LL_ABR bloq LL_CRR {printf("WHILE ");}
+flowcontr: IF conds LL_ABR bloq LL_CRR ELSE { verificaCondicion(); }LL_ABR bloq LL_CRR {printf("IF CON ELSE ");}
+				 | IF conds LL_ABR bloq LL_CRR {verificaCondicion(); printf("IF SIMPLE ");}
+				 | WHILE conds LL_ABR bloq LL_CRR {verificaCondicion(); printf("WHILE ");}
 				 ;
 
 conds: cond {printf("Condicion ");}
-		 | conds unionlog cond {printf("Condicion multiple ");}
+		 | conds AND {condicionCompuesta++;} cond {printf("Condicion multiple ");}
+		 | conds OR {condicionCompuesta++;} cond {banderaOR++; siguientePolaca = posicionPolaca+1; printf("Condicion multiple ");}
 		 ;
-
-unionlog: AND {printf("AND ");}
-				| OR  {printf("OR ");}
-				;
 
 cond: NOT cond {printf("Negacion de condicion ");}
 		| PR_ABR cond PR_CRR
-		| operando oplog operando
+		| operando oplog operando { enlistar(&polacaLista, "CMP", posicionPolaca); posicionPolaca++;
+									enlistar(&polacaLista, simboloComparacion, posicionPolaca); apilarEntero(&condicionesOR, posicionPolaca);
+									apilar(&simbolosASS, simboloComparacion); posicionPolaca++;
+									printf("VOY A ENLISTAR DPS DE ENLISTAR CMP   %s\n", simboloComparacion); 
+								  }
 		;
 
-oplog: EQ {printf("EQ ");}
-		 | NEQ {printf("NEQ ");}
-		 | LT {printf("LT ");}
-		 | LEQ {printf("LEQ ");}
-		 | GT {printf("GT ");}
-		 | GEQ {printf("GEQ ");}
+oplog: EQ {strcpy(simboloComparacion, "BNE"); printf("EQ ");}
+		 | NEQ {strcpy(simboloComparacion, "BEQ"); printf("NEQ ");}
+		 | LT {strcpy(simboloComparacion, "BGT"); printf("LT ");}
+		 | LEQ {strcpy(simboloComparacion, "BGE"); printf("LEQ ");}
+		 | GT {strcpy(simboloComparacion, "BLE"); printf("GT ");}
+		 | GEQ {strcpy(simboloComparacion, "BLT"); printf("GEQ ");}
 		 ;
 
 sent: decl endstmt
@@ -162,9 +164,18 @@ sent: decl endstmt
 endstmt: END_STMT | NL {printf("\n");};
 
 decl: VAR lista_ids AS CR_ABR tipos CR_CRR {printf("Declaracion de variables "); AddIds($2, $5);}
-	 	| CONST_NOMBRE ID ASIGN CONST_INT {printf("CONST_NOMBRE ID ASIGN CONST_INT"); AddConstantNombre($2, $4, TABLE_INT);}
-		| CONST_NOMBRE ID ASIGN CONST_R {printf("CONST_NOMBRE ID ASIGN CONST_R"); AddConstantNombre($2, $4, TABLE_REAL);}
-		| CONST_NOMBRE ID ASIGN STR {printf("CONST_NOMBRE ID ASIGN STR"); AddConstantString($2, $4);}
+	 	| CONST_NOMBRE ID ASIGN CONST_INT {enlistar(&polacaLista, $2, posicionPolaca); posicionPolaca++;
+			 							   enlistar(&polacaLista, $4, posicionPolaca); posicionPolaca++;
+            							   enlistar(&polacaLista, "=", posicionPolaca); posicionPolaca++;
+										   printf("CONST_NOMBRE ID ASIGN CONST_INT"); AddConstantNombre($2, $4, TABLE_INT);}
+		| CONST_NOMBRE ID ASIGN CONST_R {enlistar(&polacaLista, $2, posicionPolaca); posicionPolaca++;
+										 enlistar(&polacaLista, $4, posicionPolaca); posicionPolaca++;
+            							 enlistar(&polacaLista, "=", posicionPolaca); posicionPolaca++;
+										 printf("CONST_NOMBRE ID ASIGN CONST_R"); AddConstantNombre($2, $4, TABLE_REAL);}
+		| CONST_NOMBRE ID ASIGN STR {enlistar(&polacaLista, $2, posicionPolaca); posicionPolaca++;
+									 enlistar(&polacaLista, $4, posicionPolaca); posicionPolaca++;
+            						 enlistar(&polacaLista, "=", posicionPolaca); posicionPolaca++;
+									 printf("CONST_NOMBRE ID ASIGN STR"); AddConstantString($2, $4);}
 		;
 
 lista_ids: CR_ABR ids CR_CRR {strcpy($$, $2);}
@@ -185,43 +196,47 @@ tipo: REAL {strcpy($$, "real");} | STRING_T {strcpy($$, "string");} | INT {strcp
  * ASIGNACION
  * ========================= */
 
-assg: left ASIGN assg {printf("Asignacion multiple ");}
-		| left ASIGN right {printf("Asignacion ");}
+assg: left ASIGN assg {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;
+					   enlistar(&polacaLista, "=", posicionPolaca); posicionPolaca++;
+					   printf("Asignacion multiple ");}
+		| left ASIGN right {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;
+					   		enlistar(&polacaLista, "=", posicionPolaca); posicionPolaca++;
+							printf("Asignacion ");}
 		;
 
-left: ID {CheckId($1);}
+left: ID {CheckId($1); strcpy($$, $1);}
 		;
 
 right: expr
 		 | str_const
 		 ;
 
-str_const: STR {printf("CONST_STR "); AddString($1);}
+str_const: STR {printf("CONST_STR "); AddString($1); enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;}
 	 ;
 
 /* =========================
  * ARITMETICA
  * ========================= */
 
-expr: expr arth_opr termino {printf("Operacion aritmetica ");}
+expr: expr SUM termino {enlistar(&polacaLista, "+", posicionPolaca); posicionPolaca++; printf("Operacion aritmetica SUM ");}
+		| expr MIN termino {enlistar(&polacaLista, "-", posicionPolaca); posicionPolaca++;  printf("Operacion aritmetica MIN ");}
 		| termino
 		;
 
-termino: PR_ABR expr PR_CRR {printf("Expresion en parentesis ");}
+termino: termino MULT factor {enlistar(&polacaLista, "*", posicionPolaca); posicionPolaca++; printf("Multiplicacion: ");}
+			 | termino DIV factor { enlistar(&polacaLista, "/", posicionPolaca); posicionPolaca++; printf("Division: ");}
+			 | factor { terminoIdx = factorIdx; }
+			 ;
+
+factor: PR_ABR expr PR_CRR {printf("Expresion en parentesis ");}
 		| llong     {printf("LONGITUD ");}
-		| ID        {CheckId($1); printf("ID ");}
+		| ID        {CheckId($1); enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++; printf("ID ");}
 		| const_num
 		;
 
-const_num: CONST_R   {printf("CONST_R "); AddReal($1);}
-		| CONST_INT {printf("CONST_INT "); AddInteger($1);}
+const_num: CONST_R   {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++; printf("CONST_R "); AddReal($1);}
+		| CONST_INT {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++; printf("CONST_INT "); AddInteger($1);}
 		;
-
-arth_opr: SUM {printf("SUM ");}
-				| MIN {printf("MIN ");}
-				| MULT {printf("MULT ");}
-				| DIV {printf("DIV ");}
-				;
 
 llong: LEN PR_ABR lista_ids PR_CRR
 		 | LEN PR_ABR lista_const PR_CRR
@@ -234,14 +249,18 @@ constantes: constante
 					| constantes COMA constante
 					;
 
-constante: const_num | str_const;
+constante: const_num 
+			| str_const {enlistar(&polacaLista, $1, posicionPolaca); posicionPolaca++;};
 
 /* =========================
  * IO
  * ========================= */
 
-iostmt: DISPLAY operando {printf("DISPLAY ");}
-			| GET ID {CheckId($2); printf("GET ");}
+iostmt: DISPLAY operando {enlistar(&polacaLista, "DISP", posicionPolaca); posicionPolaca++;
+						printf("DISPLAY ");}
+			| GET ID {enlistar(&polacaLista, $2, posicionPolaca); posicionPolaca++; 
+					  enlistar(&polacaLista, "GET", posicionPolaca); posicionPolaca++;
+					  CheckId($2); printf("GET ");}
 			;
 
 operando: expr | str_const;
@@ -253,6 +272,14 @@ int main(int argc, char *argv[]) {
 	sym_table = NewList();
 
 	lexout = fopen("lex.out", "wt");
+
+    crear_lista(&polacaLista);
+    crear_pila(&pila);
+    crear_pila(&simbolosASS);
+    crear_pila(&rellenar);
+    crear_pila(&maximoPila);
+    crear_cola(&cola);
+
 	yyparse();
 
 
@@ -279,6 +306,9 @@ int main(int argc, char *argv[]) {
 		}
 		fprintf(tstxt, "%40s%10s%40s%10d\n", sym.name, type, sym.value, sym.len);
 	}
+
+	vaciar_lista_INTERMEDIO(&polacaLista, posicionPolaca);
+
 }
 
 /**
@@ -458,3 +488,49 @@ Symbol *Lookup(const List *const lst, const char *const name)
 	return NULL;
 }
 
+void invertirSimbolo(char* aux){
+	
+	if(strcmp(aux, "BEQ") == 0){
+					strcpy(aux, "BNE");
+				}else if(strcmp(aux, "BNE") == 0){
+					strcpy(aux, "BEQ");
+				} else if(strcmp(aux, "BLT") == 0){
+					strcpy(aux, "BGE");
+				}else  if(strcmp(aux, "BLE") == 0){
+					printf("ENTRE A BEQ    SIMBOLOCOMPARACION TIENE %s\n", aux);
+					strcpy(aux, "BGT");
+					printf("SALGO DE BEQ    SIMBOLOCOMPARACION TIENE %s\n", aux);
+				}else	if(strcmp(aux, "BGT") == 0){
+					strcpy(aux, "BLE");
+				}else{
+					strcpy(aux, "BLT");
+				}
+}
+
+void verificaCondicion(){
+	if(condicionCompuesta){
+		condicionCompuesta = 0;
+		if(banderaOR){
+				char aux1[5];
+				char aux2[5];
+				desapilar(&simbolosASS, aux1);
+				desapilar(&simbolosASS, aux2);
+
+				printf("ENTRE A BANDERAOR\n");
+				invertirSimbolo(aux2);
+				
+				banderaOR = 0;
+				rellenarPolacaChar(&polacaLista, desapilarEntero(&condicionesOR), aux1);
+				rellenarPolacaChar(&polacaLista, desapilarEntero(&condicionesOR), aux2);
+				rellenarPolaca(&polacaLista, desapilarEntero(&rellenar), posicionPolaca+1);
+				rellenarPolaca(&polacaLista, desapilarEntero(&rellenar), siguientePolaca);
+		}else{
+		
+		rellenarPolaca(&polacaLista, desapilarEntero(&rellenar), posicionPolaca+1);
+		rellenarPolaca(&polacaLista, desapilarEntero(&rellenar), posicionPolaca+1);
+		}	
+	}
+	else{
+		rellenarPolaca(&polacaLista, desapilarEntero(&rellenar), posicionPolaca+1);
+	} 
+}
