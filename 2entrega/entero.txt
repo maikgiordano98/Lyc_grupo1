@@ -1,6 +1,0 @@
-var [entero] as [int]
-
-*/ asignacion de entero /*
-entero = 12
-
-entero = entero + 1

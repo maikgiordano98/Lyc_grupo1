@@ -6,7 +6,7 @@ var [ str, entero, flotante ] as [ string, int, real ]
 var [str2] as [string]
 
 */ asignacion de entero /*
-entero = 12
+entero = 115
 
 */ asignacion de real /*
 flotante = 1200000.5

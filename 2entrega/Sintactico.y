@@ -254,7 +254,7 @@ constante: const_num
  * IO
  * ========================= */
 
-iostmt: DISPLAY operando {enlistar(&polacaLista, "DISP", posicionPolaca); posicionPolaca++;
+iostmt: DISPLAY operando {enlistar(&polacaLista, "DISPLAY", posicionPolaca); posicionPolaca++;
 						printf("DISPLAY ");}
 			| GET ID {enlistar(&polacaLista, $2, posicionPolaca); posicionPolaca++; 
 					  enlistar(&polacaLista, "GET", posicionPolaca); posicionPolaca++;
@@ -495,9 +495,7 @@ void invertirSimbolo(char* aux){
 				} else if(strcmp(aux, "BLT") == 0){
 					strcpy(aux, "BGE");
 				}else  if(strcmp(aux, "BLE") == 0){
-					printf("ENTRE A BEQ    SIMBOLOCOMPARACION TIENE %s\n", aux);
 					strcpy(aux, "BGT");
-					printf("SALGO DE BEQ    SIMBOLOCOMPARACION TIENE %s\n", aux);
 				}else	if(strcmp(aux, "BGT") == 0){
 					strcpy(aux, "BLE");
 				}else{
@@ -514,7 +512,6 @@ void verificaCondicion(){
 				desapilar(&simbolosASS, aux1);
 				desapilar(&simbolosASS, aux2);
 
-				printf("ENTRE A BANDERAOR\n");
 				invertirSimbolo(aux2);
 				
 				banderaOR = 0;
