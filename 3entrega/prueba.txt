@@ -1,0 +1,82 @@
+*/ comentario /*
+
+*/ declaracion de variables /*
+var [ c ] as [ real ]
+var [ str, entero, flotante ] as [ string, int, real ]
+var [str2] as [string]
+
+*/ asignacion de entero /*
+entero = 115
+
+*/ asignacion de real /*
+flotante = 1200000.5
+c = .5
+c = 12.5
+
+*/ asignacion de cadenas /*
+str = ""
+str2 = "Hello, World!"
+
+*/ operaciones /*
+entero = entero + 1
+entero = entero - 1
+entero = entero * 2
+entero = entero / 2
+entero = entero + 1*2 - 4/2
+
+*/ selecciones /*
+if entero == 1 {
+	*/ impresion de entero /*
+	DISPLAY entero
+} else {
+	DISPLAY "distinto de 1"
+}
+
+if entero != 1 {
+	*/ impresion de float /*
+	DISPLAY flotante
+} else {
+	DISPLAY "igual a 1"
+}
+
+if entero <= 1 && entero >= 0 {
+	*/ impresion de cadena /*
+	DISPLAY str2
+} else {
+	DISPLAY "Mayor a 1 o Menor a 0"
+}
+
+if entero < 1 || entero > 0 {
+	*/ impresion de operacion /*
+	DISPLAY entero + 1
+}
+
+*/ ciclo while /*
+while entero != 0 {
+	*/ get obtiene entrada de stdin /*
+	get entero
+
+	*/ con seleccion anidada /*
+	if entero == 1 {
+		DISPLAY "no elegiste 1"
+	}
+}
+
+entero = 1
+
+*/ ciclos anidados /*
+while entero != 0 {
+	while entero != 0 {
+		get entero
+	}
+}
+
+*/ Temas especiales /*
+*/ Constantes con Nombre /*
+
+CONST strConst = "Ingrese cantidad de dias"
+CONST pivot = 30
+CONST soyInt = 2
+CONST soyReal = 2.3
+CONST soyString = "soy string"
+
